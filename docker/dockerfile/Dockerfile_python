@@ -1,0 +1,12 @@
+
+FROM python:slim-bookworm
+
+WORKDIR /build
+
+COPY OTF.zip OTF.zip
+
+RUN sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list.d/debian.sources \
+    && apt-get update -y && apt-get upgrade -y && apt-get install -y fontconfig unzip \
+    && pip config set global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple \
+    && unzip /build/OTF.zip -d /usr/share/fonts && rm -rf /build/OTF.zip && rm -rf /usr/share/fonts/truetype && fc-cache -f -v && fc-list \
+    && apt autoclean && apt autoremove
